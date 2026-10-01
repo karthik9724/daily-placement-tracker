@@ -237,6 +237,3 @@ If you find this project useful, consider giving the repository a ⭐ on GitHub.
 
 **https://daily-placement-tracker.vercel.app/**
 
-
-You can create the file in GitHub as **`README.md`**, paste this content, and commit it. The **Live Demo** link will then appear near the top of your repository page.
-```
