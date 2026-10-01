@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "placement-tracker-v1";
+const CACHE_NAME = "placement-tracker-v2";
 
 const FILES_TO_CACHE = [
     "./",
@@ -8,14 +8,12 @@ const FILES_TO_CACHE = [
 ];
 
 
-// Install Service Worker
-
-self.addEventListener("install", function (event) {
+self.addEventListener("install", function(event) {
 
     event.waitUntil(
 
         caches.open(CACHE_NAME)
-            .then(function (cache) {
+            .then(function(cache) {
 
                 return cache.addAll(
                     FILES_TO_CACHE
@@ -26,59 +24,102 @@ self.addEventListener("install", function (event) {
     );
 
     self.skipWaiting();
+
 });
 
 
-// Activate Service Worker
-
-self.addEventListener("activate", function (event) {
+self.addEventListener("activate", function(event) {
 
     event.waitUntil(
 
-        caches.keys().then(function (cacheNames) {
+        caches.keys()
+            .then(function(cacheNames) {
 
-            return Promise.all(
+                return Promise.all(
 
-                cacheNames.map(function (cacheName) {
+                    cacheNames.map(
+                        function(cacheName) {
 
-                    if (cacheName !== CACHE_NAME) {
+                            if (
+                                cacheName !== CACHE_NAME
+                            ) {
 
-                        return caches.delete(
-                            cacheName
-                        );
+                                return caches.delete(
+                                    cacheName
+                                );
 
-                    }
+                            }
 
-                })
+                        }
+                    )
 
-            );
+                );
 
-        })
+            })
 
     );
 
     self.clients.claim();
+
 });
 
 
-// Fetch cached files
+/*
+    NETWORK FIRST
 
-self.addEventListener("fetch", function (event) {
+    Try to get the latest version
+    from GitHub Pages first.
+
+    If internet is unavailable,
+    use the cached version.
+*/
+
+self.addEventListener("fetch", function(event) {
 
     event.respondWith(
 
-        caches.match(event.request)
-            .then(function (response) {
+        fetch(event.request)
 
-                if (response) {
+            .then(function(response) {
 
-                    return response;
-                }
+                /*
+                    Save a copy of the latest
+                    response in cache.
+                */
 
-                return fetch(event.request);
+                const responseClone =
+                    response.clone();
+
+
+                caches.open(CACHE_NAME)
+                    .then(function(cache) {
+
+                        cache.put(
+                            event.request,
+                            responseClone
+                        );
+
+                    });
+
+
+                return response;
+
+            })
+
+            .catch(function() {
+
+                /*
+                    If internet is unavailable,
+                    use cached version.
+                */
+
+                return caches.match(
+                    event.request
+                );
 
             })
 
     );
 
 });
+
