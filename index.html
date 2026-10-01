@@ -25,6 +25,9 @@
     <meta name="apple-mobile-web-app-title"
           content="Placement Tracker">
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <title>Daily Placement Tracker</title>
 
     <style>
@@ -90,6 +93,30 @@
             width: 0%;
             background: #28a745;
             transition: 0.3s;
+        }
+
+        /* =========================
+           7 DAY GRAPH
+        ========================= */
+
+        .chart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 300px;
         }
 
         /* =========================
@@ -265,6 +292,18 @@
                 padding: 15px;
             }
 
+            .chart-box {
+                padding: 15px;
+            }
+
+            .chart-title {
+                font-size: 18px;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+
             .buttons {
                 flex-direction: column;
             }
@@ -286,6 +325,7 @@
 
     <div class="date" id="today"></div>
 
+
     <!-- INSTALL APP BUTTON -->
 
     <button id="installButton">
@@ -293,7 +333,7 @@
     </button>
 
 
-    <!-- PROGRESS -->
+    <!-- TODAY'S PROGRESS -->
 
     <div class="progress-box">
 
@@ -310,6 +350,25 @@
             <div class="progress-fill"
                  id="progressFill">
             </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         7 DAY PROGRESS GRAPH
+    ========================= -->
+
+    <div class="chart-box">
+
+        <div class="chart-title">
+            📈 Last 7 Days Progress
+        </div>
+
+        <div class="chart-wrapper">
+
+            <canvas id="progressChart"></canvas>
 
         </div>
 
@@ -697,6 +756,8 @@
 
     const rows = document.querySelectorAll(".row");
 
+    let progressChart = null;
+
 
     /* =========================
        SAVE PROGRESS
@@ -721,6 +782,49 @@
             "lastProgressDate",
             getTodayKey()
         );
+
+        /* Save today's percentage */
+        saveTodayHistory();
+    }
+
+
+    /* =========================
+       SAVE DAILY GRAPH DATA
+    ========================= */
+
+    function saveTodayHistory() {
+
+        let completed = 0;
+
+        checkboxes.forEach((checkbox) => {
+
+            if (checkbox.checked) {
+                completed++;
+            }
+
+        });
+
+        const percentage =
+            Math.round(
+                (completed / checkboxes.length) * 100
+            );
+
+
+        let history = JSON.parse(
+            localStorage.getItem("progressHistory") || "{}"
+        );
+
+
+        history[getTodayKey()] = percentage;
+
+
+        localStorage.setItem(
+            "progressHistory",
+            JSON.stringify(history)
+        );
+
+
+        updateProgressChart();
     }
 
 
@@ -758,6 +862,23 @@
             );
 
             updateProgress();
+
+            /*
+                Start today's graph value at 0%
+            */
+
+            let history = JSON.parse(
+                localStorage.getItem("progressHistory") || "{}"
+            );
+
+            history[todayKey] = 0;
+
+            localStorage.setItem(
+                "progressHistory",
+                JSON.stringify(history)
+            );
+
+            updateProgressChart();
 
             return;
         }
@@ -797,6 +918,8 @@
 
 
         updateProgress();
+
+        updateProgressChart();
     }
 
 
@@ -838,6 +961,209 @@
 
 
     /* =========================
+       7 DAY GRAPH
+    ========================= */
+
+    function updateProgressChart() {
+
+        const chartCanvas =
+            document.getElementById("progressChart");
+
+
+        if (!chartCanvas) {
+            return;
+        }
+
+
+        let history = JSON.parse(
+            localStorage.getItem("progressHistory") || "{}"
+        );
+
+
+        const labels = [];
+
+        const values = [];
+
+
+        /*
+            Get previous 6 days
+            + today
+        */
+
+        for (let i = 6; i >= 0; i--) {
+
+            const date = new Date();
+
+            date.setDate(
+                date.getDate() - i
+            );
+
+
+            const key =
+                date.getFullYear() + "-" +
+                String(
+                    date.getMonth() + 1
+                ).padStart(2, "0") + "-" +
+                String(
+                    date.getDate()
+                ).padStart(2, "0");
+
+
+            const label =
+                date.toLocaleDateString(
+                    "en-IN",
+                    {
+                        day: "numeric",
+                        month: "short"
+                    }
+                );
+
+
+            labels.push(label);
+
+
+            values.push(
+                history[key] !== undefined
+                    ? history[key]
+                    : 0
+            );
+        }
+
+
+        /*
+            Destroy old chart
+            before creating new one
+        */
+
+        if (progressChart) {
+
+            progressChart.destroy();
+
+        }
+
+
+        progressChart =
+            new Chart(chartCanvas, {
+
+                type: "line",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Daily Completion",
+
+                            data: values,
+
+                            borderWidth: 3,
+
+                            tension: 0.3,
+
+                            fill: true,
+
+                            pointRadius: 5,
+
+                            pointHoverRadius: 7
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            min: 0,
+
+                            max: 100,
+
+                            ticks: {
+
+                                stepSize: 20,
+
+                                callback:
+                                    function(value) {
+
+                                        return value + "%";
+
+                                    }
+
+                            },
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    "Completion"
+
+                            }
+
+                        },
+
+                        x: {
+
+                            title: {
+
+                                display: true,
+
+                                text: "Date"
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display: true
+
+                        },
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label:
+                                    function(context) {
+
+                                        return (
+                                            " Progress: " +
+                                            context.parsed.y +
+                                            "%"
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+    }
+
+
+    /* =========================
        CHECKBOX
     ========================= */
 
@@ -864,6 +1190,7 @@
                 updateProgress();
 
                 saveProgress();
+
             }
         );
 
@@ -955,9 +1282,28 @@
             );
 
 
+            /*
+                Add new day to graph
+            */
+
+            let history = JSON.parse(
+                localStorage.getItem("progressHistory") || "{}"
+            );
+
+            history[todayKey] = 0;
+
+            localStorage.setItem(
+                "progressHistory",
+                JSON.stringify(history)
+            );
+
+
             showToday();
 
             updateProgress();
+
+            updateProgressChart();
+
         }
 
     }, 30000);
@@ -985,6 +1331,7 @@
 
             installButton.style.display =
                 "block";
+
         }
     );
 
@@ -1010,6 +1357,7 @@
                 console.log(
                     "App installed"
                 );
+
             }
 
 
@@ -1017,6 +1365,7 @@
 
             installButton.style.display =
                 "none";
+
         }
     );
 
@@ -1033,6 +1382,7 @@
             console.log(
                 "Placement Tracker installed"
             );
+
         }
     );
 
