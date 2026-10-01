@@ -1,27 +1,32 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#007bff">
+    <meta name="theme-color"
+          content="#007bff">
 
     <meta name="description"
           content="Daily placement preparation timetable tracker">
 
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest"
+          href="manifest.json">
 
-    <!-- Android -->
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable"
+          content="yes">
 
-    <!-- iPhone -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable"
+          content="yes">
+
     <meta name="apple-mobile-web-app-status-bar-style"
           content="default">
+
     <meta name="apple-mobile-web-app-title"
           content="Placement Tracker">
 
@@ -29,6 +34,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>Daily Placement Tracker</title>
+
 
     <style>
 
@@ -39,27 +45,32 @@
             font-family: Arial, sans-serif;
         }
 
+
         body {
             background: #f4f6f8;
             padding: 30px;
             color: #222;
         }
 
+
         .container {
             max-width: 1000px;
             margin: auto;
         }
+
 
         h1 {
             text-align: center;
             margin-bottom: 10px;
         }
 
+
         .date {
             text-align: center;
             margin-bottom: 25px;
             color: #666;
         }
+
 
         /* =========================
            PROGRESS
@@ -73,12 +84,14 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
+
         .progress-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             font-weight: bold;
         }
+
 
         .progress-bar {
             width: 100%;
@@ -88,6 +101,7 @@
             overflow: hidden;
         }
 
+
         .progress-fill {
             height: 100%;
             width: 0%;
@@ -95,8 +109,9 @@
             transition: 0.3s;
         }
 
+
         /* =========================
-           7 DAY GRAPH
+           GRAPH
         ========================= */
 
         .chart-box {
@@ -107,17 +122,21 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
+
         .chart-title {
             text-align: center;
             margin-bottom: 15px;
             font-size: 20px;
+            font-weight: bold;
         }
+
 
         .chart-wrapper {
             position: relative;
             width: 100%;
             height: 300px;
         }
+
 
         /* =========================
            INSTALL BUTTON
@@ -137,9 +156,11 @@
             cursor: pointer;
         }
 
+
         #installButton:hover {
             background: #0069d9;
         }
+
 
         /* =========================
            TIMETABLE
@@ -152,6 +173,7 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
+
         .row {
             display: grid;
             grid-template-columns: 110px 1fr 120px;
@@ -161,24 +183,29 @@
             transition: 0.3s;
         }
 
+
         .row:last-child {
             border-bottom: none;
         }
+
 
         .time {
             font-weight: bold;
             color: #333;
         }
 
+
         .activity {
             font-size: 16px;
         }
+
 
         .target {
             color: #777;
             font-size: 14px;
             margin-top: 4px;
         }
+
 
         /* =========================
            CHECKBOX
@@ -191,6 +218,7 @@
             gap: 8px;
         }
 
+
         .check-area input {
             width: 22px;
             height: 22px;
@@ -198,10 +226,12 @@
             accent-color: #28a745;
         }
 
+
         .check-text {
             font-size: 14px;
             color: #555;
         }
+
 
         /* =========================
            COMPLETED
@@ -211,14 +241,17 @@
             background: #eaf8ee;
         }
 
+
         .row.completed .activity {
             text-decoration: line-through;
             color: #777;
         }
 
+
         .row.completed .time {
             color: #28a745;
         }
+
 
         /* =========================
            BUTTONS
@@ -231,6 +264,7 @@
             margin-top: 20px;
         }
 
+
         button {
             padding: 10px 18px;
             border: none;
@@ -239,19 +273,23 @@
             font-weight: bold;
         }
 
+
         button:hover {
             opacity: 0.85;
         }
+
 
         .check-all {
             background: #007bff;
             color: white;
         }
 
+
         .reset {
             background: #dc3545;
             color: white;
         }
+
 
         /* =========================
            MOBILE
@@ -263,87 +301,111 @@
                 padding: 12px;
             }
 
+
             h1 {
                 font-size: 24px;
             }
+
 
             .row {
                 grid-template-columns: 75px 1fr 40px;
                 padding: 14px 10px;
             }
 
+
             .check-text {
                 display: none;
             }
+
 
             .activity {
                 font-size: 14px;
             }
 
+
             .target {
                 font-size: 12px;
             }
+
 
             .time {
                 font-size: 12px;
             }
 
+
             .progress-box {
                 padding: 15px;
             }
+
 
             .chart-box {
                 padding: 15px;
             }
 
+
             .chart-title {
                 font-size: 18px;
             }
+
 
             .chart-wrapper {
                 height: 250px;
             }
 
+
             .buttons {
                 flex-direction: column;
             }
 
+
             .buttons button {
                 width: 100%;
             }
+
         }
 
     </style>
+
 </head>
 
 
 <body>
 
+
 <div class="container">
+
 
     <h1>📅 Daily Placement Tracker</h1>
 
-    <div class="date" id="today"></div>
+
+    <div class="date"
+         id="today">
+    </div>
 
 
-    <!-- INSTALL APP BUTTON -->
+    <!-- INSTALL -->
 
     <button id="installButton">
         📱 Install Placement Tracker
     </button>
 
 
-    <!-- TODAY'S PROGRESS -->
+    <!-- PROGRESS -->
 
     <div class="progress-box">
 
         <div class="progress-header">
 
-            <span>Today's Progress</span>
+            <span>
+                Today's Progress
+            </span>
 
-            <span id="progressText">0%</span>
+            <span id="progressText">
+                0%
+            </span>
 
         </div>
+
 
         <div class="progress-bar">
 
@@ -356,15 +418,14 @@
     </div>
 
 
-    <!-- =========================
-         7 DAY PROGRESS GRAPH
-    ========================= -->
+    <!-- GRAPH -->
 
     <div class="chart-box">
 
         <div class="chart-title">
             📈 Last 7 Days Progress
         </div>
+
 
         <div class="chart-wrapper">
 
@@ -381,318 +442,655 @@
 
 
         <div class="row">
-            <div class="time">5:15 AM</div>
+
+            <div class="time">
+                5:15 AM
+            </div>
 
             <div>
-                <div class="activity">🌅 Wake up</div>
-                <div class="target">Target: 5:15 AM</div>
+
+                <div class="activity">
+                    🌅 Wake up
+                </div>
+
+                <div class="target">
+                    Target: 5:15 AM
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">5:15–5:30</div>
+
+            <div class="time">
+                5:15–5:30
+            </div>
 
             <div>
-                <div class="activity">💧 Fresh up + Water</div>
-                <div class="target">Target: 15 min</div>
+
+                <div class="activity">
+                    💧 Fresh up + Water
+                </div>
+
+                <div class="target">
+                    Target: 15 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">5:30–7:00</div>
+
+            <div class="time">
+                5:30–7:00
+            </div>
 
             <div>
-                <div class="activity">💻 DSA / Coding</div>
-                <div class="target">Target: 1.5 hrs</div>
+
+                <div class="activity">
+                    💻 DSA / Coding
+                </div>
+
+                <div class="target">
+                    Target: 1.5 hrs
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">7:00–7:40</div>
+
+            <div class="time">
+                7:00–7:40
+            </div>
 
             <div>
-                <div class="activity">🏋️ Workout</div>
-                <div class="target">Target: 40 min</div>
+
+                <div class="activity">
+                    🏋️ Workout
+                </div>
+
+                <div class="target">
+                    Target: 40 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">7:40–8:20</div>
+
+            <div class="time">
+                7:40–8:20
+            </div>
 
             <div>
-                <div class="activity">🚿 Bath + Breakfast</div>
-                <div class="target">Target: 40 min</div>
+
+                <div class="activity">
+                    🚿 Bath + Breakfast
+                </div>
+
+                <div class="target">
+                    Target: 40 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">8:20–8:50</div>
+
+            <div class="time">
+                8:20–8:50
+            </div>
 
             <div>
-                <div class="activity">🎒 Get Ready</div>
-                <div class="target">Target: 30 min</div>
+
+                <div class="activity">
+                    🎒 Get Ready
+                </div>
+
+                <div class="target">
+                    Target: 30 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">8:50–9:00</div>
+
+            <div class="time">
+                8:50–9:00
+            </div>
 
             <div>
-                <div class="activity">🚶 Walk to College</div>
-                <div class="target">Target: Reach on time</div>
+
+                <div class="activity">
+                    🚶 Walk to College
+                </div>
+
+                <div class="target">
+                    Target: Reach on time
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">9:00–3:20</div>
+
+            <div class="time">
+                9:00–3:20
+            </div>
 
             <div>
-                <div class="activity">🏫 College</div>
-                <div class="target">Target: Attend classes</div>
+
+                <div class="activity">
+                    🏫 College
+                </div>
+
+                <div class="target">
+                    Target: Attend classes
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">3:20–3:40</div>
+
+            <div class="time">
+                3:20–3:40
+            </div>
 
             <div>
-                <div class="activity">🚶 Walk to Hostel</div>
-                <div class="target">Target: 20 min</div>
+
+                <div class="activity">
+                    🚶 Walk to Hostel
+                </div>
+
+                <div class="target">
+                    Target: 20 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">3:40–4:00</div>
+
+            <div class="time">
+                3:40–4:00
+            </div>
 
             <div>
-                <div class="activity">😌 Rest</div>
-                <div class="target">Target: 20 min</div>
+
+                <div class="activity">
+                    😌 Rest
+                </div>
+
+                <div class="target">
+                    Target: 20 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">4:00–5:00</div>
+
+            <div class="time">
+                4:00–5:00
+            </div>
 
             <div>
-                <div class="activity">🧮 Aptitude</div>
-                <div class="target">Target: 1 hr</div>
+
+                <div class="activity">
+                    🧮 Aptitude
+                </div>
+
+                <div class="target">
+                    Target: 1 hr
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">5:00–5:40</div>
+
+            <div class="time">
+                5:00–5:40
+            </div>
 
             <div>
-                <div class="activity">🍪 Snacks + Break</div>
-                <div class="target">Target: 40 min</div>
+
+                <div class="activity">
+                    🍪 Snacks + Break
+                </div>
+
+                <div class="target">
+                    Target: 40 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">5:40–6:00</div>
+
+            <div class="time">
+                5:40–6:00
+            </div>
 
             <div>
-                <div class="activity">🧮 Aptitude Revision</div>
-                <div class="target">Target: Mistakes</div>
+
+                <div class="activity">
+                    🧮 Aptitude Revision
+                </div>
+
+                <div class="target">
+                    Target: Mistakes
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">6:00–7:15</div>
+
+            <div class="time">
+                6:00–7:15
+            </div>
 
             <div>
-                <div class="activity">📚 Core CS</div>
-                <div class="target">Target: 1 hr 15 min</div>
+
+                <div class="activity">
+                    📚 Core CS
+                </div>
+
+                <div class="target">
+                    Target: 1 hr 15 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">7:15–8:00</div>
+
+            <div class="time">
+                7:15–8:00
+            </div>
 
             <div>
-                <div class="activity">📚 Core / College Work</div>
-                <div class="target">Target: 45 min</div>
+
+                <div class="activity">
+                    📚 Core / College Work
+                </div>
+
+                <div class="target">
+                    Target: 45 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">8:00–9:00</div>
+
+            <div class="time">
+                8:00–9:00
+            </div>
 
             <div>
-                <div class="activity">🍽️ Dinner + Relax</div>
-                <div class="target">Target: 1 hr</div>
+
+                <div class="activity">
+                    🍽️ Dinner + Relax
+                </div>
+
+                <div class="target">
+                    Target: 1 hr
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">9:00–10:00</div>
+
+            <div class="time">
+                9:00–10:00
+            </div>
 
             <div>
-                <div class="activity">🚀 Project</div>
-                <div class="target">Target: 1 hr</div>
+
+                <div class="activity">
+                    🚀 Project
+                </div>
+
+                <div class="target">
+                    Target: 1 hr
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">10:00–10:30</div>
+
+            <div class="time">
+                10:00–10:30
+            </div>
 
             <div>
-                <div class="activity">🗣️ Communication</div>
-                <div class="target">Target: 30 min</div>
+
+                <div class="activity">
+                    🗣️ Communication
+                </div>
+
+                <div class="target">
+                    Target: 30 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">10:30–10:40</div>
+
+            <div class="time">
+                10:30–10:40
+            </div>
 
             <div>
-                <div class="activity">🔄 Daily Review</div>
-                <div class="target">Target: 10 min</div>
+
+                <div class="activity">
+                    🔄 Daily Review
+                </div>
+
+                <div class="target">
+                    Target: 10 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">10:40–10:50</div>
+
+            <div class="time">
+                10:40–10:50
+            </div>
 
             <div>
-                <div class="activity">🌙 Prepare for Bed</div>
-                <div class="target">Target: 10 min</div>
+
+                <div class="activity">
+                    🌙 Prepare for Bed
+                </div>
+
+                <div class="target">
+                    Target: 10 min
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
 
 
         <div class="row">
-            <div class="time">10:50 PM</div>
+
+            <div class="time">
+                10:50 PM
+            </div>
 
             <div>
-                <div class="activity">😴 Sleep</div>
-                <div class="target">Target: Sleep on time</div>
+
+                <div class="activity">
+                    😴 Sleep
+                </div>
+
+                <div class="target">
+                    Target: Sleep on time
+                </div>
+
             </div>
 
             <div class="check-area">
+
                 <input type="checkbox">
-                <span class="check-text">Done</span>
+
+                <span class="check-text">
+                    Done
+                </span>
+
             </div>
+
         </div>
+
 
     </div>
 
@@ -706,6 +1104,7 @@
             ✅ Complete All
         </button>
 
+
         <button class="reset"
                 onclick="resetAll()">
             🔄 Reset Day
@@ -713,10 +1112,12 @@
 
     </div>
 
+
 </div>
 
 
 <script>
+
 
     /* =========================
        DATE
@@ -729,6 +1130,7 @@
         return now.getFullYear() + "-" +
             String(now.getMonth() + 1).padStart(2, "0") + "-" +
             String(now.getDate()).padStart(2, "0");
+
     }
 
 
@@ -738,11 +1140,14 @@
 
         document.getElementById("today").innerText =
             now.toLocaleDateString("en-IN", {
+
                 weekday: "long",
                 year: "numeric",
                 month: "long",
                 day: "numeric"
+
             });
+
     }
 
 
@@ -750,11 +1155,15 @@
        ELEMENTS
     ========================= */
 
-    const checkboxes = document.querySelectorAll(
-        '.check-area input[type="checkbox"]'
-    );
+    const checkboxes =
+        document.querySelectorAll(
+            '.check-area input[type="checkbox"]'
+        );
 
-    const rows = document.querySelectorAll(".row");
+
+    const rows =
+        document.querySelectorAll(".row");
+
 
     let progressChart = null;
 
@@ -767,42 +1176,52 @@
 
         const progress = [];
 
-        checkboxes.forEach((checkbox) => {
 
-            progress.push(checkbox.checked);
+        checkboxes.forEach(function(checkbox) {
+
+            progress.push(
+                checkbox.checked
+            );
 
         });
+
 
         localStorage.setItem(
             "dailyProgress",
             JSON.stringify(progress)
         );
 
+
         localStorage.setItem(
             "lastProgressDate",
             getTodayKey()
         );
 
-        /* Save today's percentage */
+
         saveTodayHistory();
+
     }
 
 
     /* =========================
-       SAVE DAILY GRAPH DATA
+       SAVE HISTORY
     ========================= */
 
     function saveTodayHistory() {
 
         let completed = 0;
 
-        checkboxes.forEach((checkbox) => {
+
+        checkboxes.forEach(function(checkbox) {
 
             if (checkbox.checked) {
+
                 completed++;
+
             }
 
         });
+
 
         const percentage =
             Math.round(
@@ -810,12 +1229,16 @@
             );
 
 
-        let history = JSON.parse(
-            localStorage.getItem("progressHistory") || "{}"
-        );
+        let history =
+            JSON.parse(
+                localStorage.getItem(
+                    "progressHistory"
+                ) || "{}"
+            );
 
 
-        history[getTodayKey()] = percentage;
+        history[getTodayKey()] =
+            percentage;
 
 
         localStorage.setItem(
@@ -825,6 +1248,7 @@
 
 
         updateProgressChart();
+
     }
 
 
@@ -835,84 +1259,98 @@
     function loadProgress() {
 
         const savedDate =
-            localStorage.getItem("lastProgressDate");
+            localStorage.getItem(
+                "lastProgressDate"
+            );
 
-        const todayKey = getTodayKey();
+
+        const todayKey =
+            getTodayKey();
 
 
         if (savedDate !== todayKey) {
 
-            checkboxes.forEach((checkbox, index) => {
+            checkboxes.forEach(
+                function(checkbox, index) {
 
-                checkbox.checked = false;
-
-                rows[index].classList.remove(
-                    "completed"
-                );
-
-            });
-
-            localStorage.removeItem(
-                "dailyProgress"
-            );
-
-            localStorage.setItem(
-                "lastProgressDate",
-                todayKey
-            );
-
-            updateProgress();
-
-            /*
-                Start today's graph value at 0%
-            */
-
-            let history = JSON.parse(
-                localStorage.getItem("progressHistory") || "{}"
-            );
-
-            history[todayKey] = 0;
-
-            localStorage.setItem(
-                "progressHistory",
-                JSON.stringify(history)
-            );
-
-            updateProgressChart();
-
-            return;
-        }
-
-
-        const savedProgress =
-            JSON.parse(
-                localStorage.getItem("dailyProgress")
-            );
-
-
-        if (savedProgress) {
-
-            checkboxes.forEach((checkbox, index) => {
-
-                checkbox.checked =
-                    savedProgress[index] || false;
-
-
-                if (checkbox.checked) {
-
-                    rows[index].classList.add(
-                        "completed"
-                    );
-
-                } else {
+                    checkbox.checked = false;
 
                     rows[index].classList.remove(
                         "completed"
                     );
 
                 }
+            );
 
-            });
+
+            localStorage.removeItem(
+                "dailyProgress"
+            );
+
+
+            localStorage.setItem(
+                "lastProgressDate",
+                todayKey
+            );
+
+
+            let history =
+                JSON.parse(
+                    localStorage.getItem(
+                        "progressHistory"
+                    ) || "{}"
+                );
+
+
+            if (history[todayKey] === undefined) {
+
+                history[todayKey] = 0;
+
+            }
+
+
+            localStorage.setItem(
+                "progressHistory",
+                JSON.stringify(history)
+            );
+
+
+            updateProgress();
+
+            updateProgressChart();
+
+            return;
+
+        }
+
+
+        const savedProgress =
+            JSON.parse(
+                localStorage.getItem(
+                    "dailyProgress"
+                )
+            );
+
+
+        if (savedProgress) {
+
+            checkboxes.forEach(
+                function(checkbox, index) {
+
+                    checkbox.checked =
+                        savedProgress[index] || false;
+
+
+                    if (checkbox.checked) {
+
+                        rows[index].classList.add(
+                            "completed"
+                        );
+
+                    }
+
+                }
+            );
 
         }
 
@@ -920,6 +1358,7 @@
         updateProgress();
 
         updateProgressChart();
+
     }
 
 
@@ -932,7 +1371,7 @@
         let completed = 0;
 
 
-        checkboxes.forEach((checkbox) => {
+        checkboxes.forEach(function(checkbox) {
 
             if (checkbox.checked) {
 
@@ -951,33 +1390,44 @@
 
         document.getElementById(
             "progressText"
-        ).innerText = percentage + "%";
+        ).innerText =
+            percentage + "%";
 
 
         document.getElementById(
             "progressFill"
-        ).style.width = percentage + "%";
+        ).style.width =
+            percentage + "%";
+
     }
 
 
     /* =========================
-       7 DAY GRAPH
+       GRAPH
     ========================= */
 
     function updateProgressChart() {
 
         const chartCanvas =
-            document.getElementById("progressChart");
+            document.getElementById(
+                "progressChart"
+            );
 
 
-        if (!chartCanvas) {
+        if (!chartCanvas ||
+            typeof Chart === "undefined") {
+
             return;
+
         }
 
 
-        let history = JSON.parse(
-            localStorage.getItem("progressHistory") || "{}"
-        );
+        let history =
+            JSON.parse(
+                localStorage.getItem(
+                    "progressHistory"
+                ) || "{}"
+            );
 
 
         const labels = [];
@@ -985,14 +1435,10 @@
         const values = [];
 
 
-        /*
-            Get previous 6 days
-            + today
-        */
-
         for (let i = 6; i >= 0; i--) {
 
             const date = new Date();
+
 
             date.setDate(
                 date.getDate() - i
@@ -1027,13 +1473,9 @@
                     ? history[key]
                     : 0
             );
+
         }
 
-
-        /*
-            Destroy old chart
-            before creating new one
-        */
 
         if (progressChart) {
 
@@ -1043,113 +1485,115 @@
 
 
         progressChart =
-            new Chart(chartCanvas, {
+            new Chart(
+                chartCanvas,
+                {
 
-                type: "line",
+                    type: "line",
 
-                data: {
 
-                    labels: labels,
+                    data: {
 
-                    datasets: [
+                        labels: labels,
 
-                        {
 
-                            label:
-                                "Daily Completion",
+                        datasets: [
 
-                            data: values,
+                            {
 
-                            borderWidth: 3,
+                                label:
+                                    "Daily Completion",
 
-                            tension: 0.3,
+                                data: values,
 
-                            fill: true,
+                                borderWidth: 3,
 
-                            pointRadius: 5,
+                                tension: 0.3,
 
-                            pointHoverRadius: 7
+                                fill: true,
 
-                        }
+                                pointRadius: 5,
 
-                    ]
-
-                },
-
-                options: {
-
-                    responsive: true,
-
-                    maintainAspectRatio: false,
-
-                    scales: {
-
-                        y: {
-
-                            min: 0,
-
-                            max: 100,
-
-                            ticks: {
-
-                                stepSize: 20,
-
-                                callback:
-                                    function(value) {
-
-                                        return value + "%";
-
-                                    }
-
-                            },
-
-                            title: {
-
-                                display: true,
-
-                                text:
-                                    "Completion"
+                                pointHoverRadius: 7
 
                             }
 
-                        },
-
-                        x: {
-
-                            title: {
-
-                                display: true,
-
-                                text: "Date"
-
-                            }
-
-                        }
+                        ]
 
                     },
 
-                    plugins: {
 
-                        legend: {
+                    options: {
 
-                            display: true
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+
+                        scales: {
+
+                            y: {
+
+                                min: 0,
+
+                                max: 100,
+
+                                ticks: {
+
+                                    stepSize: 20,
+
+                                    callback:
+                                        function(value) {
+
+                                            return value + "%";
+
+                                        }
+
+                                }
+
+                            },
+
+
+                            x: {
+
+                                title: {
+
+                                    display: true,
+
+                                    text: "Date"
+
+                                }
+
+                            }
 
                         },
 
-                        tooltip: {
 
-                            callbacks: {
+                        plugins: {
 
-                                label:
-                                    function(context) {
+                            legend: {
 
-                                        return (
-                                            " Progress: " +
-                                            context.parsed.y +
-                                            "%"
-                                        );
+                                display: true
 
-                                    }
+                            },
+
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label:
+                                        function(context) {
+
+                                            return (
+                                                " Progress: " +
+                                                context.parsed.y +
+                                                "%"
+                                            );
+
+                                        }
+
+                                }
 
                             }
 
@@ -1158,8 +1602,8 @@
                     }
 
                 }
+            );
 
-            });
     }
 
 
@@ -1167,34 +1611,37 @@
        CHECKBOX
     ========================= */
 
-    checkboxes.forEach((checkbox, index) => {
+    checkboxes.forEach(
+        function(checkbox, index) {
 
-        checkbox.addEventListener(
-            "change",
-            function () {
+            checkbox.addEventListener(
+                "change",
+                function() {
 
-                if (this.checked) {
+                    if (this.checked) {
 
-                    rows[index].classList.add(
-                        "completed"
-                    );
+                        rows[index].classList.add(
+                            "completed"
+                        );
 
-                } else {
+                    } else {
 
-                    rows[index].classList.remove(
-                        "completed"
-                    );
+                        rows[index].classList.remove(
+                            "completed"
+                        );
+
+                    }
+
+
+                    updateProgress();
+
+                    saveProgress();
+
                 }
+            );
 
-
-                updateProgress();
-
-                saveProgress();
-
-            }
-        );
-
-    });
+        }
+    );
 
 
     /* =========================
@@ -1203,20 +1650,23 @@
 
     function checkAll() {
 
-        checkboxes.forEach((checkbox, index) => {
+        checkboxes.forEach(
+            function(checkbox, index) {
 
-            checkbox.checked = true;
+                checkbox.checked = true;
 
-            rows[index].classList.add(
-                "completed"
-            );
+                rows[index].classList.add(
+                    "completed"
+                );
 
-        });
+            }
+        );
 
 
         updateProgress();
 
         saveProgress();
+
     }
 
 
@@ -1226,87 +1676,97 @@
 
     function resetAll() {
 
-        checkboxes.forEach((checkbox, index) => {
+        checkboxes.forEach(
+            function(checkbox, index) {
 
-            checkbox.checked = false;
+                checkbox.checked = false;
 
-            rows[index].classList.remove(
-                "completed"
-            );
+                rows[index].classList.remove(
+                    "completed"
+                );
 
-        });
+            }
+        );
 
 
         updateProgress();
 
         saveProgress();
+
     }
 
 
     /* =========================
-       AUTOMATIC DAILY RESET
+       AUTOMATIC NEW DAY
     ========================= */
 
-    setInterval(function () {
+    setInterval(
+        function() {
 
-        const savedDate =
-            localStorage.getItem(
-                "lastProgressDate"
-            );
-
-        const todayKey = getTodayKey();
+            const savedDate =
+                localStorage.getItem(
+                    "lastProgressDate"
+                );
 
 
-        if (savedDate !== todayKey) {
+            const todayKey =
+                getTodayKey();
 
-            checkboxes.forEach(
-                (checkbox, index) => {
 
-                    checkbox.checked = false;
+            if (savedDate !== todayKey) {
 
-                    rows[index].classList.remove(
-                        "completed"
+                checkboxes.forEach(
+                    function(checkbox, index) {
+
+                        checkbox.checked = false;
+
+                        rows[index].classList.remove(
+                            "completed"
+                        );
+
+                    }
+                );
+
+
+                localStorage.removeItem(
+                    "dailyProgress"
+                );
+
+
+                localStorage.setItem(
+                    "lastProgressDate",
+                    todayKey
+                );
+
+
+                let history =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "progressHistory"
+                        ) || "{}"
                     );
 
-                }
-            );
+
+                history[todayKey] = 0;
 
 
-            localStorage.removeItem(
-                "dailyProgress"
-            );
-
-            localStorage.setItem(
-                "lastProgressDate",
-                todayKey
-            );
+                localStorage.setItem(
+                    "progressHistory",
+                    JSON.stringify(history)
+                );
 
 
-            /*
-                Add new day to graph
-            */
+                showToday();
 
-            let history = JSON.parse(
-                localStorage.getItem("progressHistory") || "{}"
-            );
+                updateProgress();
 
-            history[todayKey] = 0;
+                updateProgressChart();
 
-            localStorage.setItem(
-                "progressHistory",
-                JSON.stringify(history)
-            );
+            }
 
-
-            showToday();
-
-            updateProgress();
-
-            updateProgressChart();
-
-        }
-
-    }, 30000);
+        },
+        30000
+    );
 
 
     /* =========================
@@ -1314,6 +1774,7 @@
     ========================= */
 
     let deferredPrompt;
+
 
     const installButton =
         document.getElementById(
@@ -1323,7 +1784,7 @@
 
     window.addEventListener(
         "beforeinstallprompt",
-        function (event) {
+        function(event) {
 
             event.preventDefault();
 
@@ -1338,21 +1799,23 @@
 
     installButton.addEventListener(
         "click",
-        async function () {
+        async function() {
 
             if (!deferredPrompt) {
+
                 return;
+
             }
 
 
             deferredPrompt.prompt();
 
 
-            const { outcome } =
+            const result =
                 await deferredPrompt.userChoice;
 
 
-            if (outcome === "accepted") {
+            if (result.outcome === "accepted") {
 
                 console.log(
                     "App installed"
@@ -1372,16 +1835,12 @@
 
     window.addEventListener(
         "appinstalled",
-        function () {
+        function() {
 
             installButton.style.display =
                 "none";
 
             deferredPrompt = null;
-
-            console.log(
-                "Placement Tracker installed"
-            );
 
         }
     );
@@ -1395,30 +1854,38 @@
 
         window.addEventListener(
             "load",
-            function () {
+            function() {
 
                 navigator.serviceWorker
                     .register(
-                        "service-worker.js"
+                        "./service-worker.js"
                     )
-                    .then(function () {
+                    .then(
+                        function(registration) {
 
-                        console.log(
-                            "Service Worker registered"
-                        );
+                            console.log(
+                                "Service Worker registered"
+                            );
 
-                    })
-                    .catch(function (error) {
 
-                        console.log(
-                            "Service Worker error:",
-                            error
-                        );
+                            registration.update();
 
-                    });
+                        }
+                    )
+                    .catch(
+                        function(error) {
+
+                            console.log(
+                                "Service Worker error:",
+                                error
+                            );
+
+                        }
+                    );
 
             }
         );
+
     }
 
 
@@ -1432,6 +1899,8 @@
 
 </script>
 
-</body>
-</html>
 
+</body>
+
+</html>
+```
