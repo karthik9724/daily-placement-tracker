@@ -1,9 +1,10 @@
-
+```json
 {
     "name": "Daily Placement Tracker",
     "short_name": "Placement Tracker",
     "description": "Daily timetable and placement preparation tracker",
     "start_url": "./index.html",
+    "scope": "./",
     "display": "standalone",
     "background_color": "#f4f6f8",
     "theme_color": "#007bff",
@@ -21,4 +22,4 @@
         }
     ]
 }
-
+```
