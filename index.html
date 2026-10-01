@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#007bff">
+
+    <meta name="description"
+          content="Daily placement preparation timetable tracker">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iPhone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="default">
+    <meta name="apple-mobile-web-app-title"
+          content="Placement Tracker">
+
+    <title>Daily Placement Tracker</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            padding: 30px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #666;
+        }
+
+        /* =========================
+           PROGRESS
+        ========================= */
+
+        .progress-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #28a745;
+            transition: 0.3s;
+        }
+
+        /* =========================
+           INSTALL BUTTON
+        ========================= */
+
+        #installButton {
+            display: none;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #installButton:hover {
+            background: #0069d9;
+        }
+
+        /* =========================
+           TIMETABLE
+        ========================= */
+
+        .schedule {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 110px 1fr 120px;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            transition: 0.3s;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .time {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .activity {
+            font-size: 16px;
+        }
+
+        .target {
+            color: #777;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           CHECKBOX
+        ========================= */
+
+        .check-area {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .check-area input {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #28a745;
+        }
+
+        .check-text {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* =========================
+           COMPLETED
+        ========================= */
+
+        .row.completed {
+            background: #eaf8ee;
+        }
+
+        .row.completed .activity {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        .row.completed .time {
+            color: #28a745;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .check-all {
+            background: #007bff;
+            color: white;
+        }
+
+        .reset {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .row {
+                grid-template-columns: 75px 1fr 40px;
+                padding: 14px 10px;
+            }
+
+            .check-text {
+                display: none;
+            }
+
+            .activity {
+                font-size: 14px;
+            }
+
+            .target {
+                font-size: 12px;
+            }
+
+            .time {
+                font-size: 12px;
+            }
+
+            .progress-box {
+                padding: 15px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .buttons button {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>📅 Daily Placement Tracker</h1>
+
+    <div class="date" id="today"></div>
+
+    <!-- INSTALL APP BUTTON -->
+
+    <button id="installButton">
+        📱 Install Placement Tracker
+    </button>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-box">
+
+        <div class="progress-header">
+
+            <span>Today's Progress</span>
+
+            <span id="progressText">0%</span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div class="progress-fill"
+                 id="progressFill">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TIMETABLE -->
+
+    <div class="schedule">
+
+
+        <div class="row">
+            <div class="time">5:15 AM</div>
+
+            <div>
+                <div class="activity">🌅 Wake up</div>
+                <div class="target">Target: 5:15 AM</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">5:15–5:30</div>
+
+            <div>
+                <div class="activity">💧 Fresh up + Water</div>
+                <div class="target">Target: 15 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">5:30–7:00</div>
+
+            <div>
+                <div class="activity">💻 DSA / Coding</div>
+                <div class="target">Target: 1.5 hrs</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">7:00–7:40</div>
+
+            <div>
+                <div class="activity">🏋️ Workout</div>
+                <div class="target">Target: 40 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">7:40–8:20</div>
+
+            <div>
+                <div class="activity">🚿 Bath + Breakfast</div>
+                <div class="target">Target: 40 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">8:20–8:50</div>
+
+            <div>
+                <div class="activity">🎒 Get Ready</div>
+                <div class="target">Target: 30 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">8:50–9:00</div>
+
+            <div>
+                <div class="activity">🚶 Walk to College</div>
+                <div class="target">Target: Reach on time</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">9:00–3:20</div>
+
+            <div>
+                <div class="activity">🏫 College</div>
+                <div class="target">Target: Attend classes</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">3:20–3:40</div>
+
+            <div>
+                <div class="activity">🚶 Walk to Hostel</div>
+                <div class="target">Target: 20 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">3:40–4:00</div>
+
+            <div>
+                <div class="activity">😌 Rest</div>
+                <div class="target">Target: 20 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">4:00–5:00</div>
+
+            <div>
+                <div class="activity">🧮 Aptitude</div>
+                <div class="target">Target: 1 hr</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">5:00–5:40</div>
+
+            <div>
+                <div class="activity">🍪 Snacks + Break</div>
+                <div class="target">Target: 40 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">5:40–6:00</div>
+
+            <div>
+                <div class="activity">🧮 Aptitude Revision</div>
+                <div class="target">Target: Mistakes</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">6:00–7:15</div>
+
+            <div>
+                <div class="activity">📚 Core CS</div>
+                <div class="target">Target: 1 hr 15 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">7:15–8:00</div>
+
+            <div>
+                <div class="activity">📚 Core / College Work</div>
+                <div class="target">Target: 45 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">8:00–9:00</div>
+
+            <div>
+                <div class="activity">🍽️ Dinner + Relax</div>
+                <div class="target">Target: 1 hr</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">9:00–10:00</div>
+
+            <div>
+                <div class="activity">🚀 Project</div>
+                <div class="target">Target: 1 hr</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">10:00–10:30</div>
+
+            <div>
+                <div class="activity">🗣️ Communication</div>
+                <div class="target">Target: 30 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">10:30–10:40</div>
+
+            <div>
+                <div class="activity">🔄 Daily Review</div>
+                <div class="target">Target: 10 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">10:40–10:50</div>
+
+            <div>
+                <div class="activity">🌙 Prepare for Bed</div>
+                <div class="target">Target: 10 min</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="time">10:50 PM</div>
+
+            <div>
+                <div class="activity">😴 Sleep</div>
+                <div class="target">Target: Sleep on time</div>
+            </div>
+
+            <div class="check-area">
+                <input type="checkbox">
+                <span class="check-text">Done</span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+        <button class="check-all"
+                onclick="checkAll()">
+            ✅ Complete All
+        </button>
+
+        <button class="reset"
+                onclick="resetAll()">
+            🔄 Reset Day
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       DATE
+    ========================= */
+
+    function getTodayKey() {
+
+        const now = new Date();
+
+        return now.getFullYear() + "-" +
+            String(now.getMonth() + 1).padStart(2, "0") + "-" +
+            String(now.getDate()).padStart(2, "0");
+    }
+
+
+    function showToday() {
+
+        const now = new Date();
+
+        document.getElementById("today").innerText =
+            now.toLocaleDateString("en-IN", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+    }
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const checkboxes = document.querySelectorAll(
+        '.check-area input[type="checkbox"]'
+    );
+
+    const rows = document.querySelectorAll(".row");
+
+
+    /* =========================
+       SAVE PROGRESS
+    ========================= */
+
+    function saveProgress() {
+
+        const progress = [];
+
+        checkboxes.forEach((checkbox) => {
+
+            progress.push(checkbox.checked);
+
+        });
+
+        localStorage.setItem(
+            "dailyProgress",
+            JSON.stringify(progress)
+        );
+
+        localStorage.setItem(
+            "lastProgressDate",
+            getTodayKey()
+        );
+    }
+
+
+    /* =========================
+       LOAD PROGRESS
+    ========================= */
+
+    function loadProgress() {
+
+        const savedDate =
+            localStorage.getItem("lastProgressDate");
+
+        const todayKey = getTodayKey();
+
+
+        if (savedDate !== todayKey) {
+
+            checkboxes.forEach((checkbox, index) => {
+
+                checkbox.checked = false;
+
+                rows[index].classList.remove(
+                    "completed"
+                );
+
+            });
+
+            localStorage.removeItem(
+                "dailyProgress"
+            );
+
+            localStorage.setItem(
+                "lastProgressDate",
+                todayKey
+            );
+
+            updateProgress();
+
+            return;
+        }
+
+
+        const savedProgress =
+            JSON.parse(
+                localStorage.getItem("dailyProgress")
+            );
+
+
+        if (savedProgress) {
+
+            checkboxes.forEach((checkbox, index) => {
+
+                checkbox.checked =
+                    savedProgress[index] || false;
+
+
+                if (checkbox.checked) {
+
+                    rows[index].classList.add(
+                        "completed"
+                    );
+
+                } else {
+
+                    rows[index].classList.remove(
+                        "completed"
+                    );
+
+                }
+
+            });
+
+        }
+
+
+        updateProgress();
+    }
+
+
+    /* =========================
+       UPDATE PROGRESS
+    ========================= */
+
+    function updateProgress() {
+
+        let completed = 0;
+
+
+        checkboxes.forEach((checkbox) => {
+
+            if (checkbox.checked) {
+
+                completed++;
+
+            }
+
+        });
+
+
+        const percentage =
+            Math.round(
+                (completed / checkboxes.length) * 100
+            );
+
+
+        document.getElementById(
+            "progressText"
+        ).innerText = percentage + "%";
+
+
+        document.getElementById(
+            "progressFill"
+        ).style.width = percentage + "%";
+    }
+
+
+    /* =========================
+       CHECKBOX
+    ========================= */
+
+    checkboxes.forEach((checkbox, index) => {
+
+        checkbox.addEventListener(
+            "change",
+            function () {
+
+                if (this.checked) {
+
+                    rows[index].classList.add(
+                        "completed"
+                    );
+
+                } else {
+
+                    rows[index].classList.remove(
+                        "completed"
+                    );
+                }
+
+
+                updateProgress();
+
+                saveProgress();
+            }
+        );
+
+    });
+
+
+    /* =========================
+       COMPLETE ALL
+    ========================= */
+
+    function checkAll() {
+
+        checkboxes.forEach((checkbox, index) => {
+
+            checkbox.checked = true;
+
+            rows[index].classList.add(
+                "completed"
+            );
+
+        });
+
+
+        updateProgress();
+
+        saveProgress();
+    }
+
+
+    /* =========================
+       RESET
+    ========================= */
+
+    function resetAll() {
+
+        checkboxes.forEach((checkbox, index) => {
+
+            checkbox.checked = false;
+
+            rows[index].classList.remove(
+                "completed"
+            );
+
+        });
+
+
+        updateProgress();
+
+        saveProgress();
+    }
+
+
+    /* =========================
+       AUTOMATIC DAILY RESET
+    ========================= */
+
+    setInterval(function () {
+
+        const savedDate =
+            localStorage.getItem(
+                "lastProgressDate"
+            );
+
+        const todayKey = getTodayKey();
+
+
+        if (savedDate !== todayKey) {
+
+            checkboxes.forEach(
+                (checkbox, index) => {
+
+                    checkbox.checked = false;
+
+                    rows[index].classList.remove(
+                        "completed"
+                    );
+
+                }
+            );
+
+
+            localStorage.removeItem(
+                "dailyProgress"
+            );
+
+            localStorage.setItem(
+                "lastProgressDate",
+                todayKey
+            );
+
+
+            showToday();
+
+            updateProgress();
+        }
+
+    }, 30000);
+
+
+    /* =========================
+       PWA INSTALL
+    ========================= */
+
+    let deferredPrompt;
+
+    const installButton =
+        document.getElementById(
+            "installButton"
+        );
+
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        function (event) {
+
+            event.preventDefault();
+
+            deferredPrompt = event;
+
+            installButton.style.display =
+                "block";
+        }
+    );
+
+
+    installButton.addEventListener(
+        "click",
+        async function () {
+
+            if (!deferredPrompt) {
+                return;
+            }
+
+
+            deferredPrompt.prompt();
+
+
+            const { outcome } =
+                await deferredPrompt.userChoice;
+
+
+            if (outcome === "accepted") {
+
+                console.log(
+                    "App installed"
+                );
+            }
+
+
+            deferredPrompt = null;
+
+            installButton.style.display =
+                "none";
+        }
+    );
+
+
+    window.addEventListener(
+        "appinstalled",
+        function () {
+
+            installButton.style.display =
+                "none";
+
+            deferredPrompt = null;
+
+            console.log(
+                "Placement Tracker installed"
+            );
+        }
+    );
+
+
+    /* =========================
+       SERVICE WORKER
+    ========================= */
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            function () {
+
+                navigator.serviceWorker
+                    .register(
+                        "service-worker.js"
+                    )
+                    .then(function () {
+
+                        console.log(
+                            "Service Worker registered"
+                        );
+
+                    })
+                    .catch(function (error) {
+
+                        console.log(
+                            "Service Worker error:",
+                            error
+                        );
+
+                    });
+
+            }
+        );
+    }
+
+
+    /* =========================
+       START
+    ========================= */
+
+    showToday();
+
+    loadProgress();
+
+</script>
+
+</body>
+</html>
+
